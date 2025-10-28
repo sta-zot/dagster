@@ -1,0 +1,10 @@
+1:
+  description: "Activities type 1"
+  dimensions:
+    - "region"
+    - "arranger"
+    - "partner"
+    - "date"
+  facts:
+    - "count"
+    
