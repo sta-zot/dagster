@@ -1,10 +1,313 @@
-1:
-  description: "Activities type 1"
-  dimensions:
-    - "region"
-    - "arranger"
-    - "partner"
-    - "date"
-  facts:
-    - "count"
-    
+column_mapping:
+  # === География ===
+  region:
+    data_type: string
+    table: dim_Location
+    attribute: region
+  municipality:
+    data_type: string
+    table: dim_Location
+    attribute: municipality
+  settlement:
+    data_type: string
+    table: dim_Location
+    attribute: settlement
+
+  # === Мероприятия ===
+
+  event_type:
+    data_type: string
+    table: dim_Event
+    attribute: type
+  event_format:
+    data_type: string
+    table: dim_Event
+    attribute: format
+  event_topic:
+    data_type: string
+    table: dim_Event
+    attribute: topic
+
+  # === Аудитория ===
+  age_group:
+    data_type: string
+    table: dim_Audience
+    attribute: age_group
+  social_group:
+    data_type: string
+    table: dim_Audience
+    attribute: soc_group
+
+  # === Организатор ===
+  organizer_name:
+    data_type: string
+    table: dim_Staff
+    attribute: name
+  department:
+    data_type: string
+    table: dim_Staff
+    attribute: department
+  personInCharge:
+    data_type: string
+    table: dim_Staff
+    attribute: name
+
+  # === Партнёры ===
+  partner_name:
+    data_type: string
+    table: dim_Partner
+    attribute: name
+  partner_type:
+    data_type: string
+    table: dim_Partner
+    attribute: type
+
+  # === Волонтёры ===
+  volunteers:
+    data_type: integer
+    table: fact_Events
+    attribute: volunteers
+  volunteers_type:
+    data_type: string
+    table: dim_Staff
+    attribute: type
+
+  # === Даты ===
+  date:
+    data_type: date
+    table: dim_Date
+    attribute: date
+  start_date:
+    data_type: date
+    table: dim_Date
+    attribute: date
+  end_date:
+    data_type: date
+    table: dim_Date
+    attribute: date
+  palcement_date:
+    data_type: date
+    table: dim_Date
+    attribute: date
+
+  # === Участники (слушатели) ===
+  fullname:
+    data_type: string
+    table: dim_Staff
+    attribute: name
+  participants_type:
+    data_type: string
+    table: dim_Staff
+    attribute: type
+  participants_spec:
+    data_type: string
+    table: dim_Staff
+    attribute: spec
+  
+
+  # === Организации ===
+  affiliation_org:
+    data_type: string
+    table: dim_Organization
+    attribute: name
+  affiliation_org_type:
+    data_type: string
+    table: dim_Organization
+    attribute: type
+  edu_org_name:
+    data_type: string
+    table: dim_Organization
+    attribute: name
+  edu_org_type:
+    data_type: string
+    table: dim_Organization
+    attribute: type
+
+  # === Программы ПК ===
+  training_program_provider:
+    data_type: string
+    table: dim_training_program
+    attribute: provider
+  training_program_name:
+    data_type: string
+    table: dim_training_program
+    attribute: name
+  num_hours:
+    data_type: integer
+    table: dim_training_program
+    attribute: duration_hours
+
+  # === Дегенеративные измерения в фактах ===
+  study_mode:
+    data_type: string
+    table: fact_Training
+    attribute: study_mode
+  event:
+    data_type: string
+    table: fact_Events
+    attribute: type
+  
+
+  # === Образовательные программы ===
+  edu_program_name:
+    data_type: string
+    table: dim_EduProgram
+    attribute: name
+
+  # === Информационные материалы ===
+  im_name:
+    data_type: string
+    table: dim_InfoMaterials
+    attribute: name
+  im_type:
+    data_type: string
+    table: dim_InfoMaterials
+    attribute: type
+  im_topic:
+    data_type: string
+    table: dim_InfoMaterials
+    attribute: topic
+  im_format:
+    data_type: string
+    table: dim_InfoMaterials
+    attribute: format
+  im_url:
+    data_type: string
+    table: fact_ImPlacementPoint
+    attribute: url
+
+  # === Точки размещения ===
+  pp_name:
+    data_type: string
+    table: dim_PlacementPoint
+    attribute: name
+  pp_type:
+    data_type: string
+    table: dim_PlacementPoint
+    attribute: type
+
+  # === Факты ===
+  participants_cnt:
+    data_type: integer
+    table: fact_Events
+    attribute: participants
+  students_cnt:
+    data_type: integer
+    table: fact_EduIntegration
+    attribute: students_cnt
+  studentsWithFinLit_cnt:
+    data_type: integer
+    table: fact_EduIntegration
+    attribute: studentsWithFinLit_cnt
+  teachers_cnt:
+    data_type: integer
+    table: fact_EduIntegration
+    attribute: Teachers_cnt
+  teachersFinLitTraining_cnt:
+    data_type: integer
+    table: fact_EduIntegration
+    attribute: TeachersFinLitTraining_cnt
+  views_cnt:
+    data_type: integer
+    table: fact_ImPlacementPoint
+    attribute: views_cnt
+  im_cnt:
+    data_type: integer
+    table: fact_ImPlacementPoint
+    attribute: PostedMaterials_Cnt
+
+  # === Флаги ===
+  hasFinLit:
+    data_type: boolean
+    table: fact_EduIntegration
+    attribute: hasFinLit
+
+dimensions:
+  dim_Location:
+    key_column: location_id
+    natural_key_columns: [region, municipality, settlement]
+
+  dim_Event:
+    key_column: event_id
+    natural_key_columns: [type, format, topic]
+
+  dim_Audience:
+    key_column: audience_id
+    natural_key_columns: [age_group, soc_group]
+
+  dim_Staff:
+    key_column: staff_id
+    natural_key_columns: [name, department, organization_id, type, spec]
+
+  dim_Partner:
+    key_column: partner_id
+    natural_key_columns: [name, type]
+
+  dim_Organization:
+    key_column: organization_id
+    natural_key_columns: [name, type]
+
+  dim_training_program:
+    key_column: training_program_id
+    natural_key_columns: [name, provider]
+
+  dim_EduProgram:
+    key_column: edu_program_id
+    natural_key_columns: [name, type]
+
+  dim_InfoMaterials:
+    key_column: info_materials_id
+    natural_key_columns: [name, type, topic, format]
+
+  dim_PlacementPoint:
+    key_column: placement_point_id
+    natural_key_columns: [name, type]
+
+  dim_Date:
+    key_column: date_id
+    natural_key_columns: [date]
+
+# dimensions:
+#   dim_Location:
+#     table: dim_Location
+#     key_column: location_id
+#     natural_key_mapping:
+#       region: region
+#       municipality: municipality
+#       settlement: settlement
+
+#   dim_Event:
+#     table: dim_Event
+#     key_column: event_id
+#     natural_key_mapping:
+#       event_type: type
+#       event_format: format
+#       event_topic: topic
+
+#   dim_Audience:
+#     table: dim_Audience
+#     key_column: audience_id
+#     natural_key_mapping:
+#       age_group: age_group
+#       social_group: soc_group
+
+#   dim_Partner:
+#     table: dim_Partner
+#     key_column: partner_id
+#     natural_key_mapping:
+#       partner_name: name
+#       partner_type: type
+
+#   # ... и так для всех измерений
+
+
+# (опционально) типы датасетов / источников
+dataset_templates:
+  events:
+    columns: [settlement, municipality, region, event, event_type, ..., partner_name, partner_type, palcement_date]
+  cpd_programs:
+    columns: [region, fullname, participants_type, ..., start_date, end_date]
+  edu_orgs:
+    columns: [settlement, municipality, edu_org_name, ...]
+  media:
+    columns: [settlement, municipality, im_name, ..., palcement_date, views_cnt]

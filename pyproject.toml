@@ -11,7 +11,8 @@ dependencies = [
     "boto3",
     "pandas",
     "sqlalchemy",
-    "python-dotenv"
+    "python-dotenv",
+    "openpyxl>=3.1.5, <3.2.0"
 ]
 
 [project.optional-dependencies]

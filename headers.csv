@@ -1,0 +1,61 @@
+header,key
+Субъект РФ,region
+ФИО,fullname
+Тип слушателя,participants_type
+специализация слушателя,participants_spec 
+место работы/учебы,affiliation_org 
+Тип места работы/учебы,affiliation_org _type
+ОУ ПК,edu_org_name
+Разработчик программы ПК,CPDProgram_provider
+Намиенование программы обучения,CPDProgram_name 
+Количество часов,num_hours 
+Форма обучения,edu_type
+Дата начала,start_date
+Дата окончания,end_date
+Населенный пункт,settlement
+Муниципальный р-н,municipality 
+Наименование ИМ,im_name
+Тип ИМ,im_type
+Тематика ИМ,im_topic
+Формат ИМ,im_format
+Наименование ТР,pp_name
+Тип ТР,pp_type
+URL-размещённых материалов,im_url
+Возрастная группа,age_group
+Социальная группа,social_group
+Организация,arranger_name
+Подразделение,department
+Ответственный,personInCharge 
+Наименование партнера,partner_name
+Тип партнёра,partner_type
+Дата размещения,palcement_date
+Количество просмотров,views_cnt
+Количество размещённых материалов,im_cnt
+Населенный пункт,settlement
+Муниципальный р-н,municipality 
+Наиемнование ОУ,edu_org_name
+Тип ОУ,edu_org_type
+ПФГ Внедерена,hasFinLit 
+Образовательная программа,edu_program_name
+количество учеников,students_cnt
+количество учеников по ПФГ,studentsWithFinLit_cnt 
+количество преподавателей,teachers_cnt 
+количество преподавателей по ПФГ,teachersFinLitTraining_cnt 
+Населённы пункт,settlement
+Район,municipality 
+Регион,region
+Мероприятие,event
+Тип мероприятия,event_type
+Формат мероприятия,event_format
+Тема мероприятия,event_topic
+Возрастная группа,age_group
+Социальная группа,social_group
+Организатор,arranger_name
+Департамент,department
+Ответственный,personInCharge 
+Партнер,partner_name
+Тип партнёра,partner_type
+Волонтеры,volunteers 
+Тип волонтёров,volunteers_type
+Дата проведения,date
+Количество участников,participants_cnt

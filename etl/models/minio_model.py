@@ -1,11 +1,13 @@
 """_summary_
 """
 
+from io import BytesIO
+from typing import BinaryIO
 import boto3
 from etl import config
 
 class Minio():
-    def __ini__(
+    def __init__(
             self,
             endpoint: str = config.S3_ENDPOINT_URL,
             access_key: str = config.S3_ACCESS_KEY,
@@ -33,7 +35,7 @@ class Minio():
             print(f"S3_STORAGE Error: {e}")
             return False
 
-    def get(self, file_name: str) -> BinaryIO:
+    def get(self, file_name: str) -> BytesIO:
         """
         Возвращает объект совместимый с объектом file в виде потока байт
         Args:
@@ -43,6 +45,6 @@ class Minio():
             BinaryIO: Объект типа StreamingBody имеющий интерфейс как у объекта file
         """
         response = self.client.get_object(
-            bucket=self.bucket_name,
+            Bucket=self.bucket_name,
             Key=file_name)
-        return response['Body']
+        return BytesIO(response['Body'].read())

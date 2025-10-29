@@ -15,7 +15,7 @@ from dagster import (
 import pandas as pd
 from etl.tools import Mapping  # noqa:
 from etl.config import CONFIGS_DIR
-
+from etl.models import Meta
 logger = get_dagster_logger()
 
 
@@ -45,6 +45,7 @@ def fetch_all_new_files(context: OpExecutionContext) -> List[dict]:
     """
     mongo = context.resources.mongo_client
     files = mongo.get_files_by_status()
+    logger.info(f"Found {len(files)} new files")
     return list(files)
 
 
@@ -61,6 +62,7 @@ def group_files_by_activity(
     for file in files:
         activity_id = file.get("activity_id")
         activity_groups.setdefault(activity_id, []).append(file)
+    logger.info(f"Found {len(activity_groups)} activity groups")
     return activity_groups
         
 
@@ -105,10 +107,7 @@ def download_and_combine_files(
         try:
             # Загружаем  файл из хранилища
             df = pd.read_excel(s3.get(file["filename"]))
-            df = df.rename(columns=[
-                mapping(key) for key in df.columns
-                ]
-            )
+            df = df.rename(columns=mapping)
             dataframes.append(df)
             metadata.append(
                 Meta(
