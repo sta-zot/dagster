@@ -3,37 +3,74 @@ import pandas as pd
 from etl.tools import revert_dict, Mapping
 from etl.models import Meta
 from etl.config import PACKAGE_ROOT as root
-from etl.models import Minio
+from etl.models import Minio, DWHModel
+from sqlalchemy import create_engine, text
 
 with open(root/"configs/mapping.yaml", encoding="utf-8") as yf:
     SCHEMA = yaml.safe_load(yf)
 
+with open(root/"configs/schema.yaml", 'r', encoding='utf-8') as f:
+    dwh_schema = yaml.safe_load(f)
+
 
 mapping_schema = ({key: SCHEMA[key]['matches'] for key, _ in SCHEMA.items()})
 
+'''
+    print(mapping_schema)
+    map = Mapping(mapping_schema)
+    minio = Minio()
+    file = minio.get("1/event_report_1.xlsx")
+    event_df = pd.read_excel(minio.get("1/event_report_1.xlsx"))
+    event_df = event_df.rename(columns=map.get)
+    print(list(event_df.columns))
+    types = ({key: SCHEMA[key]['type'] for key in event_df.columns})
+    print(event_df.dtypes)
+    # event_df["settlement"].astype('string')
+    event_df = event_df.astype(types)
+    print(event_df.dtypes)
+    cdp_df = pd.read_excel(minio.get("4/cdp_report_1.xlsx"))
+    cdp_df = cdp_df.rename(columns=map.get)
+    print(cdp_df.columns)
+    edu_df = pd.read_excel(minio.get("2/edu_report_1.xlsx"))
+    edu_df = edu_df.rename(columns=map.get)
+    print(edu_df.columns)
+    imp_df = pd.read_excel(minio.get("3/imp_report_1.xlsx"))
+    imp_df = imp_df.rename(columns=map.get)
+    print(imp_df.columns)
+    print(SCHEMA)
+    print(revert_dict(SCHEMA))
+'''
 
+#print(dwh_schema['dimensions']['dim_Location']['natural_key_columns'])
 #print(mapping_schema)
+# map = Mapping(mapping_schema)
+# minio = Minio()
+# file = minio.get("1/event_report_1.xlsx")
+# event_df = pd.read_excel(minio.get("1/event_report_1.xlsx"))
+# event_df = event_df.rename(columns=map.get)
+#
+# new_locations_df  = locations_df.iloc[20:40]
+#print(new_locations_df)
+
 map = Mapping(mapping_schema)
 minio = Minio()
 file = minio.get("1/event_report_1.xlsx")
 event_df = pd.read_excel(minio.get("1/event_report_1.xlsx"))
 event_df = event_df.rename(columns=map.get)
-print(list(event_df.columns))
-types = ({key: SCHEMA[key]['type'] for key in event_df.columns})
-print(event_df.dtypes)
-# event_df["settlement"].astype('string')
-event_df = event_df.astype(types)
-print(event_df.dtypes)
-# cdp_df = pd.read_excel(minio.get("4/cdp_report_1.xlsx"))
-# cdp_df = cdp_df.rename(columns=map.get)
-# print(cdp_df.columns)
-# edu_df = pd.read_excel(minio.get("2/edu_report_1.xlsx"))
-# edu_df = edu_df.rename(columns=map.get)
-# print(edu_df.columns)
-# imp_df = pd.read_excel(minio.get("3/imp_report_1.xlsx"))
-# imp_df = imp_df.rename(columns=map.get)
-# print(imp_df.columns)
-# print(SCHEMA)
-#print(revert_dict(SCHEMA))
+event_df["settlement"] = (
+    event_df["settlement"]
+    .str.replace(r'^[\w]+\.','', regex=True)
+    .str.strip()
+)
+dwh = DWHModel('10.0.5.89', 5433, 'testdb', 'admin', 'admin')
+n = dwh.get_ids(event_df, 'dim_audience')
+
+print(n.columns)
+# print(event_df)
+
+
+# for _, row in event_df.iterrows():
+#     print(row.to_dict()) 
+
 
 

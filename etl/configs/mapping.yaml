@@ -1,7 +1,7 @@
 region:
   type: string
   db_field: region
-  db_table: dim_Locatios
+  db_table: dim_location
   matches:
     - Субъект РФ
     - Регион
@@ -18,7 +18,7 @@ region:
 fullname:
   type: string
   db_field: name
-  db_table: dim_Staff
+  db_table: dim_staff
   matches:
     - ФИО
     - фио
@@ -33,7 +33,7 @@ fullname:
 participants_type:
   type: string
   db_field: type
-  db_table: dim_Staff
+  db_table: dim_staff
   matches:
     - Тип слушателя
     - тип слушателя
@@ -45,7 +45,7 @@ participants_type:
 participants_spec:
   type: string
   db_field: spec
-  db_table: dim_Staff
+  db_table: dim_staff
   matches:
     - специализация слушателя
     - Специализация слушателя
@@ -58,7 +58,7 @@ participants_spec:
 affiliation_org:
   type: string
   db_field: name
-  db_table: dim_Organization
+  db_table: dim_organization
   matches:
     - место работы/учебы
     - Место работы/учебы
@@ -74,7 +74,7 @@ affiliation_org:
 affiliation_org_type:
   type: string
   db_field: type
-  db_table: dim_Organization
+  db_table: dim_organization
   matches:
     - Тип места работы/учебы
     - тип места работы/учебы
@@ -86,7 +86,7 @@ affiliation_org_type:
 edu_org_name:
   type: string
   db_field: name
-  db_table: dim_Organization
+  db_table: dim_organization
   matches:
     - ОУ ПК
     - Наиемнование ОУ
@@ -102,7 +102,7 @@ edu_org_name:
 training_program_provider:
   type: string
   db_field: name
-  db_table: dim_Organization
+  db_table: dim_organization
   matches:
     - Разработчик программы ПК
     - разработчик программы пк
@@ -142,7 +142,7 @@ num_hours:
 study_mode:
   type: string
   db_field: study_mode
-  db_table: fact_Training
+  db_table: fact_trainings
   matches:
     - Форма обучения
     - форма обучения
@@ -156,7 +156,7 @@ study_mode:
 start_date:
   type: datetime64[ns]
   db_field: date
-  db_table: dim_Date
+  db_table: dim_date
   matches:
     - Дата начала
     - дата начала
@@ -170,7 +170,7 @@ start_date:
 end_date:
   type: datetime64[ns]
   db_field: date
-  db_table: dim_Date
+  db_table: dim_date
   matches:
     - Дата окончания
     - дата окончания
@@ -184,7 +184,7 @@ end_date:
 settlement:
   type: string
   db_field: settlement
-  db_table: dim_Location
+  db_table: dim_location
   matches:
     - Населенный пункт
     - Населённы пункт
@@ -202,7 +202,7 @@ settlement:
 municipality:
   type: string 
   db_field: municipality
-  db_table: location_id
+  db_table: dim_location
   matches:
     - Муниципальный р-н
     - муниципальный р-н
@@ -223,7 +223,7 @@ municipality:
 im_name:
   type: string
   db_field: name
-  db_table: dim_InfoMaterials
+  db_table: dim_info_material
   matches:
     - Наименование ИМ
     - наименование им
@@ -237,7 +237,7 @@ im_name:
 im_type:
   type: string
   db_field: type
-  db_table: dim_InfoMaterials
+  db_table: dim_info_material
   matches:
     - Тип ИМ
     - тип им
@@ -249,7 +249,7 @@ im_type:
 im_topic:
   type: string
   db_field: topic
-  db_table: dim_InfoMaterials
+  db_table: dim_info_material
   matches:
     - Тематика ИМ
     - тематика им
@@ -261,7 +261,7 @@ im_topic:
 im_format:
   type: string
   db_field: format
-  db_table: dim_InfoMaterials
+  db_table: dim_info_material
   matches:
     - Формат ИМ
     - формат им
@@ -298,7 +298,7 @@ pp_type:
 im_url:
   type: string
   db_field: url
-  db_table: fact_ImPlacementPoint
+  db_table: fact_im_placements
   matches:
     - URL-размещённых материалов
     - url-размещённых материалов
@@ -312,7 +312,7 @@ im_url:
 age_group:
   type: string
   db_field: age_group
-  db_table: dim_Audience
+  db_table: dim_audience
   matches:
     - Возрастная группа
     - возрастная группа
@@ -324,7 +324,7 @@ age_group:
 social_group:
   type: string
   db_field: soc_group
-  db_table: dim_Audience
+  db_table: dim_audience
   matches:
     - Социальная группа
     - социальная группа
@@ -336,7 +336,7 @@ social_group:
 organizer_name:
   type: string
   db_field: name
-  db_table: dim_Organization
+  db_table: dim_organization
   matches:
     - Организация
     - организация
@@ -350,7 +350,7 @@ organizer_name:
 department:
   type: string
   db_field: department
-  db_table: dim_Staff
+  db_table: dim_staff
   matches:
     - Подразделение
     - подразделение
@@ -364,7 +364,7 @@ department:
 personInCharge:
   type: string
   db_field: name
-  db_table: dim_Staff
+  db_table: dim_staff
   matches:
     - Ответственный
     - ответственный
@@ -378,7 +378,7 @@ personInCharge:
 partner_name:
   type: string
   db_field: name
-  db_table: dim_Partner
+  db_table: dim_partner
   matches:
     - Наименование партнера
     - наименование партнера
@@ -392,7 +392,7 @@ partner_name:
 partner_type:
   type: string
   db_field: type
-  db_table: dim_Partner
+  db_table: dim_partner
   matches:
     - Тип партнёра
     - тип партнёра
@@ -404,7 +404,7 @@ partner_type:
 palcement_date:
   type: datetime64[ns]
   db_field: date
-  db_table: dim_Date
+  db_table: dim_date
   matches:
     - Дата размещения
     - дата размещения
@@ -416,7 +416,7 @@ palcement_date:
 views_cnt:
   type: int
   db_field: views_cnt
-  db_table: fact_ImPlacementPoint
+  db_table: fact_im_placements
   matches:
     - Количество просмотров
     - количество просмотров
@@ -428,7 +428,7 @@ views_cnt:
 im_cnt:
   type: int
   db_field: posted_materials_cnt
-  db_table: fact_ImPlacementPoint
+  db_table: fact_im_placements
   matches:
     - Количество размещённых материалов
     - количество размещённых материалов
@@ -440,7 +440,7 @@ im_cnt:
 edu_org_type:
   type: string
   db_field: type
-  db_table: dim_Organization
+  db_table: dim_organization
   matches:
     - Тип ОУ
     - тип оу
@@ -452,7 +452,7 @@ edu_org_type:
 hasFinLit:
   type: bool
   db_field: hasFinLit
-  db_table: fact_EduIntegration
+  db_table: fact_edu_integrations
   matches:
     - ПФГ Внедерена
     - пфг внедерена
@@ -468,7 +468,7 @@ hasFinLit:
 edu_program_name:
   type: string
   db_field: name
-  db_table: dim_EduProgram
+  db_table: dim_edu_program
   matches:
     - Образовательная программа
     - образовательная программа
@@ -480,7 +480,7 @@ edu_program_name:
 students_cnt:
   type: int
   db_field: students_cnt
-  db_table: fact_EduIntegration
+  db_table: fact_edu_integrations
   matches:
     - количество учеников
     - Количество учеников
@@ -491,10 +491,10 @@ students_cnt:
     - Студенты
     - студенты
 
-studentsWithFinLit_cnt:
+students_with_finlit_cnt:
   type: int
-  db_field: studentsWithFinLit_cnt
-  db_table: fact_EduIntegration
+  db_field: students_with_finlit_cnt
+  db_table: fact_edu_integrations
   matches:
     - количество учеников по ПФГ
     - Количество учеников по ПФГ
@@ -506,7 +506,7 @@ studentsWithFinLit_cnt:
 teachers_cnt:
   type: int
   db_field: teachers_cnt
-  db_table: fact_EduIntegration
+  db_table: fact_edu_integrations
   matches:
     - количество преподавателей
     - Количество преподавателей
@@ -517,10 +517,10 @@ teachers_cnt:
     - Учителя
     - учителя
 
-teachersFinLitTraining_cnt:
+teachers_finlit_train_cnt:
   type: int
-  db_field: teachersFinLitTrained_cnt
-  db_table: fact_EduIntegration
+  db_field: teachers_fin_lit_trained_cnt
+  db_table: fact_edu_integrations
   matches:
     - количество преподавателей по ПФГ
     - Количество преподавателей по ПФГ
@@ -532,7 +532,7 @@ teachersFinLitTraining_cnt:
 event:
   type: string
   db_field: event_name
-  db_table: fact_Events
+  db_table: fact_events
   matches:
     - Мероприятие
     - мероприятие
@@ -544,7 +544,7 @@ event:
 event_type:
   type: string
   db_field: type
-  db_table: dim_Event
+  db_table: dim_event
   matches:
     - Тип мероприятия
     - тип мероприятия
@@ -556,7 +556,7 @@ event_type:
 event_format:
   type: string
   db_field: format
-  db_table: dim_Event
+  db_table: dim_event
   matches:
     - Формат мероприятия
     - формат мероприятия
@@ -568,7 +568,7 @@ event_format:
 event_topic:
   type: string
   db_field: topic
-  db_table: dim_Event
+  db_table: dim_event
   matches:
     - Тема мероприятия
     - тема мероприятия
@@ -580,7 +580,7 @@ event_topic:
 volunteers:
   type: string
   db_field: name
-  db_table: dim_Staff
+  db_table: dim_staff
   matches:
     - Волонтеры
     - волонтеры
@@ -592,7 +592,7 @@ volunteers:
 volunteers_type:
   type: string
   db_field: type
-  db_table: dim_Staff
+  db_table: dim_staff
   matches:
     - Тип волонтёров
     - тип волонтёров
@@ -604,7 +604,7 @@ volunteers_type:
 date:
   type: datetime64[ns]
   db_field: date
-  db_table: dim_Date
+  db_table: dim_date
   matches:
     - Дата проведения
     - дата проведения
@@ -618,7 +618,7 @@ date:
 participants_cnt:
   type: int
   db_field: participants_cnt
-  db_table: fact_Events
+  db_table: fact_events
   matches:
     - Количество участников
     - количество участников

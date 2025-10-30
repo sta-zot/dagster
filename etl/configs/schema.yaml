@@ -1,43 +1,43 @@
 dimensions:
-  dim_Location:
+  dim_location:
     id: location_id
     natural_key_columns:
       - region
       - municipality
       - settlement
-  dim_Event:
+  dim_event:
     id: event_id
     natural_key_columns:
       - name
       - type
       - format
       - topic
-  dim_Partner:
+  dim_partner:
     id: partner_id
     natural_key_columns: [name, type]
-  dim_Audience:
+  dim_audience:
     id: audience_id
     natural_key_columns: [age_group, soc_group]
-  dim_PlacementPoint:
+  dim_placement_point:
     id: placement_point_id
     natural_key_columns: [name, type]
-  dim_InfoMaterials:
+  dim_info_material:
     id: info_materials_id
     natural_key_columns: [name, type, topic, format]
-  dim_TrainingProgram:
+  dim_training_program:
     id: training_program_id
     natural_key_columns: [name, provider, duration_hours]
-  dim_Date:
+  dim_date:
     id: date_id
     natural_key_columns: [date]
-  dim_Organization:
+  dim_organization:
     id: organization_id
     natural_key_columns: [name, type]
-  dim_Staff:
+  dim_staff:
     id: staff_id
-    natural_key_columns: [name, department, organization_id]
+    natural_key_columns: [name, department, type]
 facts:
-  fact_Events:
+  fact_events:
     id: fact_event_id
     columns:
       - is_edu_materials_used
@@ -51,24 +51,24 @@ facts:
       - date_id
       - participants_cnt
       - volunteers_cnt
-  volunteersInEvent: # Вспомогательная таблица для свизи волонтеров и мероприятий в которых они учавствовали
+  volunteers_in_events: # Вспомогательная таблица для свизи волонтеров и мероприятий в которых они учавствовали
     id: ''
     columns:
       - event_id
       - staff_id
       - comment
-  fact_Training:
+  fact_trainings:
     id: ''
     columns:
       - study_mode # дегенеративное измерение
       - location_id # Географическое Место проведения ПК
-      - training_provider_id # Организация на базе которой проводится ПК, dim_Organization.id
+      - training_provider_id # Организация на базе которой проводится ПК, dim_organization.id
       - training_program_id # //Программа повышения квалификации(разраб программы, длительность название)
       - staff_id # Слушатель прошедший обучение (тип специализация)
       - affiliation_org_id # Место работы/учебы слушателя
       - start_date_id
       - end_date_id
-  fact_EduIntegration:
+  fact_edu_integrations:
     id: ''
     columns:
       - hasFinLit
@@ -76,11 +76,11 @@ facts:
       - organization_id # Образовательное учреждение
       - edu_program_id  # Образовательная программа(начального, общего, среднего и т.п.)
       - teachers_cnt                
-      - teachersFinLitTrained_cnt   
+      - teachers_finlit_trained_cnt   
       - teachersFinLitTraining_cnt  
       - students_cnt                
-      - studentsWithFinLit_cnt
-  fact_ImPlacementPoint:
+      - students_with_finlit_cnt
+  fact_im_placements:
     id: ''
     columns:
       - location_id

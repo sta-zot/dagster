@@ -88,7 +88,7 @@ def emit_file_groups(
 def download_and_combine_files(
     context: OpExecutionContext,
     file_group: List[Dict[str, Any]]
-) -> pd.DataFrame:
+) -> Tuple[pd.DataFrame, List[Meta]]:
     """
     Скачивает файлы из S3 по метаданным, приводит заголовки к единому виду,
     объединяет в один DataFrame.
@@ -133,9 +133,9 @@ def download_and_combine_files(
         dataframes.append(df)
         metadata.append(
             Meta(
-                document_id=file.get("document_id"),
+                document_id=file.get("document_id", ""),
                 status="processed",
-                reason=None
+                reason="None"
             )
         )
     return pd.concat(dataframes, ignore_index=True), metadata
@@ -150,6 +150,12 @@ def clean_and_enrich(
     """
     combined_df = combined_df.drop_duplicates()
     combined_df = combined_df.dropna(how="all")
+    combined_df["settlement"] = (
+                combined_df["settlement"]
+                .str.replace(r'^[\w]+\.','', regex=True)
+                .str.strip()
+    )
+    return combined_df
     
 @op
 def split_to_dims_and_facts(
