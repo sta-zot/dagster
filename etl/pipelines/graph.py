@@ -29,6 +29,8 @@ with open(CONFIGS_DIR/"schema.yaml") as f:
 with open(CONFIGS_DIR/"mapping.yaml") as f:
     MAPPING = yaml.safe_load(f)
 
+FIELDS_STD_SCHEMA = ({key: SCHEMA[key]['matches'] for key, _ in SCHEMA.items()})
+
 # ==============================
 # 2. OPS — шаги обработки данных
 # ==============================
@@ -93,7 +95,7 @@ def download_and_combine_files(
     Использует: context.resources.s3_client
     """
     metadata = []
-    mapping = Mapping(MAPPING).get
+    mapping = Mapping(FIELDS_STD_SCHEMA).get
     s3 = context.resources.s3_client
     dataframes = []
     for file in file_group:
@@ -107,24 +109,35 @@ def download_and_combine_files(
         try:
             # Загружаем  файл из хранилища
             df = pd.read_excel(s3.get(file["filename"]))
-            df = df.rename(columns=mapping)
-            dataframes.append(df)
+        except  Exception as e:
             metadata.append(
                 Meta(
                     document_id=file.get("document_id"),
-                    status="processed",
-                    reason=None
+                    status="error",
+                    reason=f"Не удалось загрузить файл {e}"
                 )
             )
+            continue
+        try:
+            df = df.rename(columns=mapping)
+            
         except Exception as e:
             metadata.append(
                 Meta(
                     document_id=file.get("document_id"),
                     status="error",
-                    reason=f"File not found. {e}"
+                    reason=f"Не удалось стандартизировать имена заголовков отчёта. {e}"
                 )
             )
             continue
+        dataframes.append(df)
+        metadata.append(
+            Meta(
+                document_id=file.get("document_id"),
+                status="processed",
+                reason=None
+            )
+        )
     return pd.concat(dataframes, ignore_index=True), metadata
 
 @op
@@ -138,8 +151,6 @@ def clean_and_enrich(
     combined_df = combined_df.drop_duplicates()
     combined_df = combined_df.dropna(how="all")
     
-
-
 @op
 def split_to_dims_and_facts(
     context: OpExecutionContext, clean_df: pd.DataFrame

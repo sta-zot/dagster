@@ -42,6 +42,24 @@ def revert_dict(dictionary: Dict) -> Dict:
 
 class Mapping():
     def __init__(self, mapping: Dict, threshold: float = 0.8) -> None:
+        '''
+            Класс принимает словарь где ключом  является стандартное имя поля,
+            а значением ключа список названий которые надо заенить 
+            >>> {
+            >>>     standard_field_name: [variable field names ]
+            >>> }
+            или словарь где ключами являются различные названия полей,
+            а значением является стандартное имя поля
+            >>> {
+            >>>     variable_field_name1 : standard_field_name,
+            >>>     variable_field_name2 : standard_field_name,
+            >>>     # e.t.c.
+            >>> }
+            Args:
+                mapping (Dict): Словарь для замены различных названий полей на стандартное
+                threshold (float): Уровень совпадения строки в случае если в заголовках 
+                названий полей имеются опечатки
+        '''
         if not mapping:
             raise ValueError("Mapping is empty.")
         if not isinstance(mapping, dict):
@@ -71,3 +89,5 @@ class Mapping():
         else:
             print(self.mapping)
             raise KeyError(f"Key '{key}' not found in mapping.")
+        
+        
