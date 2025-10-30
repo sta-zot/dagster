@@ -5,72 +5,72 @@ from etl.models import Meta
 from etl.config import PACKAGE_ROOT as root
 from etl.models import Minio, DWHModel
 from sqlalchemy import create_engine, text
+from etl.pipelines import fetch_all_new_files
 
 with open(root/"configs/mapping.yaml", encoding="utf-8") as yf:
-    SCHEMA = yaml.safe_load(yf)
+    MAPPING_SCHEMA = yaml.safe_load(yf)
 
 with open(root/"configs/schema.yaml", 'r', encoding='utf-8') as f:
     dwh_schema = yaml.safe_load(f)
 
+# dim_location_df = pd.read_csv(root/"data/locations.csv")
+# print(dim_location_df.columns)
+# dim_location_df.drop(['id'], inplace=True, axis=1)
+# print(dim_location_df.columns)
+# engine = create_engine("postgresql://admin:admin@10.0.5.89:5433/testdb")
 
-mapping_schema = ({key: SCHEMA[key]['matches'] for key, _ in SCHEMA.items()})
+# dim_location_df.to_sql('dim_location', engine, if_exists='append', index=False)
 
-'''
-    print(mapping_schema)
-    map = Mapping(mapping_schema)
-    minio = Minio()
-    file = minio.get("1/event_report_1.xlsx")
-    event_df = pd.read_excel(minio.get("1/event_report_1.xlsx"))
-    event_df = event_df.rename(columns=map.get)
-    print(list(event_df.columns))
-    types = ({key: SCHEMA[key]['type'] for key in event_df.columns})
-    print(event_df.dtypes)
-    # event_df["settlement"].astype('string')
-    event_df = event_df.astype(types)
-    print(event_df.dtypes)
-    cdp_df = pd.read_excel(minio.get("4/cdp_report_1.xlsx"))
-    cdp_df = cdp_df.rename(columns=map.get)
-    print(cdp_df.columns)
-    edu_df = pd.read_excel(minio.get("2/edu_report_1.xlsx"))
-    edu_df = edu_df.rename(columns=map.get)
-    print(edu_df.columns)
-    imp_df = pd.read_excel(minio.get("3/imp_report_1.xlsx"))
-    imp_df = imp_df.rename(columns=map.get)
-    print(imp_df.columns)
-    print(SCHEMA)
-    print(revert_dict(SCHEMA))
-'''
-
-#print(dwh_schema['dimensions']['dim_Location']['natural_key_columns'])
-#print(mapping_schema)
-# map = Mapping(mapping_schema)
-# minio = Minio()
-# file = minio.get("1/event_report_1.xlsx")
-# event_df = pd.read_excel(minio.get("1/event_report_1.xlsx"))
-# event_df = event_df.rename(columns=map.get)
-#
-# new_locations_df  = locations_df.iloc[20:40]
-#print(new_locations_df)
-
-map = Mapping(mapping_schema)
-minio = Minio()
-file = minio.get("1/event_report_1.xlsx")
-event_df = pd.read_excel(minio.get("1/event_report_1.xlsx"))
-event_df = event_df.rename(columns=map.get)
-event_df["settlement"] = (
-    event_df["settlement"]
-    .str.replace(r'^[\w]+\.','', regex=True)
-    .str.strip()
+mapping_schema = ({key: MAPPING_SCHEMA[key]['matches'] for key, _ in MAPPING_SCHEMA.items()})
+dwh = DWHModel(
+    db_host="10.0.5.89",
+    db_port=5433,
+    db_name="testdb",
+    db_user="admin",
+    db_password="admin",
 )
-dwh = DWHModel('10.0.5.89', 5433, 'testdb', 'admin', 'admin')
-n = dwh.get_ids(event_df, 'dim_audience')
+minio = Minio()
+mapping = Mapping(mapping_schema)
+file_event_report_1 = "1/event_report_1.xlsx"
+event_report = pd.read_excel(minio.get(file_event_report_1))
+# print(event_report.columns)
+event_report = event_report.rename(columns=mapping.get)
+event_report['settlement'] = (
+    event_report['settlement']
+    .str.strip()
+    .str.replace(r'^[\w]+\.', '', regex=True)
+    .str.strip())
+# print(event_report.columns) 
 
-print(n.columns)
-# print(event_df)
-
-
-# for _, row in event_df.iterrows():
-#     print(row.to_dict()) 
-
-
-
+ids = dwh.process_dims(
+    df=event_report,
+    table="dim_location",
+    lookup_fields=["region", "settlement"],
+    target_fields=["region", "municipality",'settlement'],
+    key_col="location_id"
+)
+print(f'RESULT: \n {ids.columns}')
+ids = dwh.process_dims(
+    df=ids,
+    table="dim_audience",
+    lookup_fields=["social_group", "age_group"],
+    target_fields=["social_group", "age_group"],
+    key_col="audience_id"
+)
+print(f'RESULT: \n {ids.columns}')
+ids = dwh.process_dims(
+    df=ids,
+    table="dim_partner",
+    lookup_fields=["partner_name", "partner_type"],
+    target_fields=["partner_name", "partner_type"],
+    key_col="partner_id"
+)
+print(f'RESULT: \n {ids.columns}')
+ids = dwh.process_dims(
+    df=ids,
+    table="dim_event",
+    lookup_fields=["event_type", "event_format", "event_topic", ],
+    target_fields=["event_type", "event_format", "event_topic",],
+    key_col="dim_event"
+)
+print(f'RESULT: \n {ids.columns}')

@@ -8,7 +8,6 @@ dimensions:
   dim_event:
     id: event_id
     natural_key_columns:
-      - name
       - type
       - format
       - topic

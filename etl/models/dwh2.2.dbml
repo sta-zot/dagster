@@ -1,0 +1,317 @@
+
+
+Table fact_events [headercolor: #ff0202]{
+  //________________Дегенеративные измерения_____________________________
+    fact_event_id            int [pk, increment]
+    is_edu_materials_used   bool
+    auditorium              varchar
+    event_name              varchar
+  //____________________________________________________________________
+
+  //________________________Измерения ___________________________________
+    location_id         int     // Место проведения
+    partner_id          int     // партнер по проведению мероприятий
+    event_id            int     // мероприятие 
+    audience_id         int     // Идентификатор целевой аудитории
+    organizer_id         int     // идентификатор организатора 
+    date_id             int     // Время проведения мероприятий
+  //________________________________________________________________________
+
+  //_____________________________Факты_______________________________________
+    participants_cnt        int     //Количество людей принявших участие в мероприятии
+    volunteers_cnt        int     //Количество волонтёров участвовавших в мероприятии
+  //________________________________________________________________________
+
+}
+
+//_____________________________ fact_trainings References _________________________________
+    ref: fact_events.location_id > dim_location.location_id
+    ref: fact_events.partner_id > dim_partner.partner_id
+    ref: fact_events.event_id > dim_event.event_id
+    ref: fact_events.audience_id > dim_audience.audience_id
+    ref: fact_events.organizer_id > dim_staff.staff_id
+    ref: fact_events.date_id > dim_date.date_id
+//________________________________________________________________________________________________
+
+
+//__Вспомогательная таблица для указания  волонтеров учавствовавших в организации мероприятия__
+Table volunteers_in_events [headercolor: #9a02ff] {
+  volunteer_id int
+  fact_event_id int
+  comment varchar
+}
+ref: volunteers_in_events.fact_event_id > fact_events.fact_event_id
+ref: volunteers_in_events.volunteer_id > dim_staff.staff_id
+//________________________________________________________________________________________________
+
+Table fact_trainings [headercolor: #ff0084]{
+
+    //_______________________Дегенеративные измерения______________________________ 
+
+    study_mode  varchar //Форма обучения
+
+    //______________________________________________________________________________
+    //__________________________ Измерения_________________________________________
+
+    location_id             int //Место проведения ПК
+    training_provider_id    int //Организация на базе которой проводится ПК, dim_organization.id
+    training_program_id     int //Программа повышения квалификации(разраб программы, длительность название)
+    staff_id                int //Слушатель прошедший обучение (тип специализация)
+    affiliation_org_id      int //Место работы/учебы слушателя
+    start_date_id           int //Дата начала обучения
+    end_date_id             int //Дата окончания обучения
+    // ____________________________________________________________________________________
+    //________________________ Факты __________________________ 
+
+    //    student_cnt         int //Количество прошедших ПК
+    //    volunteers_cnt      int //Количество волонтёров принявших участие
+}
+//_____________________________ fact_trainings References _________________________________
+    ref: fact_trainings.location_id > dim_location.location_id
+    ref: fact_trainings.affiliation_org_id > dim_organization.organization_id 
+    
+    ref: fact_trainings.training_provider_id > dim_organization.organization_id 
+    ref: fact_trainings.training_program_id > dim_training_program.training_program_id
+    ref: fact_trainings.staff_id > dim_staff.staff_id
+    ref: fact_trainings.start_date_id > dim_date.date_id
+    ref: fact_trainings.end_date_id > dim_date.date_id
+//________________________________________________________________________________________
+
+
+Table fact_edu_integrations [headercolor: #ed3333]{
+  // ______________________Дегенеративные измерения______________________
+    hasFinLit                   bool
+  //_____________________________________________________________________
+
+  //_______________________Измерения______________________________________
+    location_id                 int     // Место проведения
+    organization_id             int     // Образовательное учреждение
+    edu_program_id               int     // Образовательная программа
+    date_id                     int     // Дата 
+  //_____________________________________________________________________
+
+  //____________________________Факты____________________________________
+    teachers_cnt                int
+    teachers_finlit_trained_cnt   int
+    teachers_finlit_train_cnt  int
+    students_cnt                int
+    students_with_finlit_cnt      int
+   
+  //_____________________________________________________________________
+}
+//______________________ fact_edu_integrations References ___________________________
+    ref: fact_edu_integrations.location_id > dim_location.location_id
+    ref: fact_edu_integrations.organization_id > dim_organization.organization_id 
+    ref: fact_edu_integrations.edu_program_id > dim_edu_program.edu_program_id
+    ref: fact_edu_integrations.date_id > dim_date.date_id
+//___________________________________________________________________________________
+
+
+Table fact_im_placements [headercolor: #61048c]{
+  //___________________Дегенеративные измерения______________________  
+    url                 text    //Сcылка на размещенные материалы в сети
+  //_________________________________________________________________  
+    // Измерения
+    location_id         int     // Место проведения
+    info_mat_id         int     //Материалы для размещения
+    placement_point_id    int     //Точка размещения материалов
+    partner_id          int     // партнер по проведению мероприятий
+    audience_id         int     // Идентификатор целевой аудитории
+    organizer_id         int     // идентификатор организатора 
+    date_id             int     // Время размещения
+    
+    //Факты
+    views_cnt           int //Количество реальных или прогрнозируемых просмотров
+    posted_materials_cnt  int 
+}
+//______________________ fact_im_placements References ___________________________
+
+    ref: fact_im_placements.location_id > dim_location.location_id 
+    ref: fact_im_placements.info_mat_id > dim_info_materials.info_materials_id
+    ref: fact_im_placements.placement_point_id > dim_placement_point.placement_point_id
+    ref: fact_im_placements.partner_id > dim_partner.partner_id  
+    ref: fact_im_placements.audience_id > dim_audience.audience_id
+    ref: fact_im_placements.organizer_id > dim_staff.staff_id
+    ref: fact_im_placements.date_id > dim_date.date_id
+//___________________________________________________________________________________
+
+
+
+//_________________________ Dimensions for DWH____________________________
+
+
+//____________Образовательные программы(начального, срегднего, и т.п.)________________
+Table dim_edu_program [headercolor: #33aced]{ 
+    edu_program_id       int [pk, increment] //Суррогатный ключ измерения
+    edu_program_bk       int [unique]  // Натуральный ключ объекта
+    name     varchar // наименование программы
+    type     varchar // тип программы
+    valid_from              timestamp [default: `now()`]
+    valid_to                timestamp [default: `now()`]
+    is_current              bool
+    indexes{
+       (name, type) [name: "program_idx", unique]
+    }
+}
+//______________________________________________________________________________________________
+
+//_________________измерение по кадрам(преподаватели школ, волонтёры)______________________
+Table dim_staff { 
+    staff_id            int [pk, increment] //Сурогатный ключ
+    staff_bk            int //Натуральный ключ из систем источников если есть
+    name                varchar // ФИО
+    type                varchar // Тип(волонтёр, преподаватель, библиотекарь и т.п.)
+    spec                varchar  // специализация (историк, географ)
+//    organization        varchar     // образовательное учреждение где работает/учится
+    department          varchar
+    is_fin_lit_provider    bool    // Преподаёт ли Фин. грамоту
+    valid_from          timestamp [default: `now()`]
+    valid_to            timestamp [default: `now()`]
+    is_current          bool
+    indexes{
+        (name, type, spec, department) [name: "staf_idx", unique]
+    }
+}
+//______________________________________________________________________________________________
+// ref: dim_staff.organization_id > dim_organization.organization_id
+
+//_________________________ Образовательные учреждения____________________________
+Table dim_organization{
+    organization_id   int [pk, increment] // Суррогатный ключ
+    organization_bk   int // Натуральный ключ
+    name varchar // Наименование образовательного учреждения
+    type varchar // Тип образовательного учреждения
+    valid_from          timestamp [default: `now()`]
+    valid_to            timestamp [default: `now()`]
+    is_current          bool
+    indexes{
+         (name, type) [name: "org_idx", unique]
+    }
+}
+//__________________________________________________________________________________
+
+//___________________________измерения Времени___________________________
+Table dim_date{
+    date_id    int [pk, increment] // surrogate key, формат YYYYMMDD
+    date            date
+    year            int
+    month           int
+    day_of_month    int
+    day_of_week     int
+    quarter         int
+}
+//_________________________________________________________________________
+
+//______________________Программа повышения квалификации___________________
+Table dim_training_program{
+    training_program_id       int [pk, increment]
+    training_program_bk       int [unique]
+    name                varchar
+    provider            varchar
+    duration_hours      float // Длительность программы в часах
+    valid_from          timestamp [default: `now()`]
+    valid_to            timestamp [default: `now()`]
+    is_current          bool
+    indexes {
+        (name, provider, duration_hours) [name: "training_idx", unique]
+    }
+}
+//_________________________________________________________________________
+
+
+//_______________________Измерения "информационные материалы"________________
+Table dim_info_materials{
+    info_materials_id        int [pk, increment]
+    info_materials_bk        int
+    name                    varchar
+    type                    varchar
+    format                  varchar
+    topic                   varchar
+    valid_from          timestamp [default: `now()`]
+    valid_to            timestamp [default: `now()`]
+    is_current          bool
+    indexes{
+        (name, type, topic, format) [name: "im_idx", unique]
+    }
+
+}
+//___________________________________________________________________________
+
+//________________Тoчка размещения информационных материалов_______________
+Table dim_placement_point{
+    placement_point_id              int [pk, increment]
+    placement_point_bk              int
+    name                          varchar
+    type                          varchar
+    valid_from          timestamp [default: `now()`]
+    valid_to            timestamp [default: `now()`]
+    is_current          bool
+    indexes{
+         (name, type) [name: "placement_idx", unique]
+    }
+
+}
+//____________________________________________________________
+
+
+//___________________ Измерение "Местоположение"__________________
+Table dim_location{
+    location_id int [pk, increment ]
+    oktmo       varchar  //Значение кода ОКТМО для населенного пункта
+    region      varchar  //Наименование субъекта Российской Федерации
+    municipality varchar //Наименование муниципального образования
+    settlement   varchar // Наименование населенного пункта
+    type         varchar  // Тип населенного пункта (город, село, деревня, кожуун, станица и др.)
+    valid_from          timestamp [default: `now()`]
+    valid_to            timestamp [default: `now()`]
+    is_current          bool
+    
+}
+//_______________________________________________________________
+
+
+//______________________________"Мероприятия"____________________
+Table dim_event{
+    event_id        int [pk, increment]
+    event_bk        int
+    type            varchar
+    format            varchar  
+    topic           varchar
+    valid_from          timestamp [default: `now()`]
+    valid_to            timestamp [default: `now()`]
+    is_current          bool
+    indexes{
+        (type, format, topic) [name: "event_idx", unique]
+    }
+}
+//________________________________________________________________
+
+
+//____________________________Портнёры____________________________
+Table dim_partner{
+    partner_id      int [pk, increment]
+    partner_bk      int 
+    type            varchar
+    name            varchar
+    valid_from          timestamp [default: `now()`]
+    valid_to            timestamp [default: `now()`]
+    is_current          bool
+    indexes{
+         (name, type) [name: "partner_idx", unique]
+    }
+}
+//_______________________________________________________________
+
+//________________________Целеввая аудитория_____________________
+Table dim_audience{
+    audience_id int [pk, increment] // SK
+    age_group   varchar
+    soc_group   varchar
+    valid_from          timestamp [default: `now()`]
+    valid_to            timestamp [default: `now()`]
+    is_current          bool
+    indexes{
+        (age_group, soc_group) [name: "audience_idx", unique]
+    }
+}
+//_______________________________________________________________

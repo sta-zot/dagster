@@ -8,6 +8,7 @@ from dagster import (
     Definitions,
     OpExecutionContext,
     DynamicOut,
+    Out,
     DynamicOutput,
     EnvVar,
     get_dagster_logger,
@@ -24,12 +25,15 @@ logger = get_dagster_logger()
 # ----------------------
 # 1. Загружаем конфиг схемы
 # ----------------------
-with open(CONFIGS_DIR/"schema.yaml") as f:
+with open(CONFIGS_DIR/"schema.yaml", 'r', encoding='utf-8') as f:
     SCHEMA = yaml.safe_load(f)
-with open(CONFIGS_DIR/"mapping.yaml") as f:
-    MAPPING = yaml.safe_load(f)
+    
+with open(CONFIGS_DIR/"mapping.yaml", 'r', encoding='utf-8') as mf:
+    MAPPING_SCHEMA = yaml.safe_load(mf)
 
-FIELDS_STD_SCHEMA = ({key: SCHEMA[key]['matches'] for key, _ in SCHEMA.items()})
+FIELDS_STD_SCHEMA = ({key: MAPPING_SCHEMA[key]['matches'] for key, _ in MAPPING_SCHEMA.items()})
+
+
 
 # ==============================
 # 2. OPS — шаги обработки данных
@@ -84,7 +88,12 @@ def emit_file_groups(
         yield DynamicOutput(file_list, mapping_key=safe_key)
 
 
-@op
+@op(
+    out={
+        "combined_df": Out(pd.DataFrame),
+        "metadata": Out(List[Meta])
+    }
+)
 def download_and_combine_files(
     context: OpExecutionContext,
     file_group: List[Dict[str, Any]]
@@ -198,8 +207,8 @@ def process_file_group(file_group: List[Dict[str, Any]]):
     """
     Последовательная обработка одной группы файлов (по activity).
     """
-    combined, metadata = download_and_combine_files(file_group)
-    cleaned = clean_and_enrich(combined)
+    combined= download_and_combine_files(file_group)
+    cleaned = clean_and_enrich(combined.combined_df)
     tables = split_to_dims_and_facts(cleaned)
     ids = load_dimensions_and_facts(tables)
     update_mongo_status(ids)
