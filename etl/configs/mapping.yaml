@@ -335,8 +335,8 @@ social_group:
 
 organizer_name:
   type: string
-  db_field: name
-  db_table: dim_organization
+  db_field: organization
+  db_table: dim_staff
   matches:
     - Организация
     - организация

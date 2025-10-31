@@ -1,5 +1,10 @@
 from typing import Dict
+from pandas import DataFrame
+from sqlalchemy.engine import Engine
 import difflib
+import pandas as pd
+from datetime import date, datetime, timedelta
+from dateutil import parser
 
 def revert_dict(dictionary: Dict) -> Dict:
     """
@@ -91,3 +96,53 @@ class Mapping():
             raise KeyError(f"Key '{key}' not found in mapping.")
         
         
+def create_date_dim(
+        start_date: str,
+        end_date: str
+) -> DataFrame:
+    """
+    Creates a date dimension table for the given date range.
+
+    Args:
+        start_date (str): The start date in the format 'YYYY-MM-DD'.
+        end_date (str): The end date in the format 'YYYY-MM-DD'.
+
+    Returns:
+        pandas.DataFrame: A DataFrame containing the date dimension table.
+
+    Генерирует датафрейм таблицы измерений времени (date dimension).
+    
+    :param start_date: начало периода (в формате 'YYYY-MM-DD')
+    :param end_date: конец периода (в формате 'YYYY-MM-DD')
+    :return: pandas.DataFrame со столбцами:
+        date_id, date, year, month, day_of_month, day_of_week, quarter
+
+    """
+    # Convert start and end dates to datetime objects
+    # Create a list of dates within the range
+    dates = pd.date_range(start=start_date, end=end_date, freq='D')
+
+    # Create a DataFrame with the date
+    df = pd.DataFrame({
+        "date_id": dates.strftime("%Y%m%d").astype(int),  # surrogate key
+        "date": dates,
+        "year": dates.year,
+        "month": dates.month,
+        "day_of_month": dates.day,
+        "day_of_week": dates.dayofweek + 1,  # 1=Пн ... 7=Вс
+        "quarter": dates.quarter
+    })
+
+    return df
+
+
+def load_location_to_db(engine: Engine)-> None:
+    locations = pd.read_csv("etl\\data\\locations.csv")
+    locations = locations.drop(columns=["id"])
+    locations.to_sql("dim_location", engine, if_exists="append", index=False)
+
+def load_date_dim_to_db(engine: Engine)-> None:
+    start_date = "2020, 1, 1"
+    end_date = "2030, 12, 31"
+    date_dim = create_date_dim(start_date, end_date)
+    date_dim.to_sql("dim_date", engine, if_exists="append", index=False)

@@ -36,9 +36,9 @@ Table fact_events [headercolor: #ff0202]{
 
 //__Вспомогательная таблица для указания  волонтеров учавствовавших в организации мероприятия__
 Table volunteers_in_events [headercolor: #9a02ff] {
-  volunteer_id int
-  fact_event_id int
-  comment varchar
+    volunteer_id int
+    fact_event_id int
+    comment varchar
 }
 ref: volunteers_in_events.fact_event_id > fact_events.fact_event_id
 ref: volunteers_in_events.volunteer_id > dim_staff.staff_id
@@ -96,7 +96,6 @@ Table fact_edu_integrations [headercolor: #ed3333]{
     teachers_finlit_train_cnt  int
     students_cnt                int
     students_with_finlit_cnt      int
-   
   //_____________________________________________________________________
 }
 //______________________ fact_edu_integrations References ___________________________
@@ -150,7 +149,7 @@ Table dim_edu_program [headercolor: #33aced]{
     valid_to                timestamp [default: `now()`]
     is_current              bool
     indexes{
-       (name, type) [name: "program_idx", unique]
+        (name, type) [name: "program_idx", unique]
     }
 }
 //______________________________________________________________________________________________
@@ -185,14 +184,14 @@ Table dim_organization{
     valid_to            timestamp [default: `now()`]
     is_current          bool
     indexes{
-         (name, type) [name: "org_idx", unique]
+        (name, type) [name: "org_idx", unique]
     }
 }
 //__________________________________________________________________________________
 
 //___________________________измерения Времени___________________________
 Table dim_date{
-    date_id    int [pk, increment] // surrogate key, формат YYYYMMDD
+    date_id    int [pk] // surrogate key, формат YYYYMMDD
     date            date
     year            int
     month           int

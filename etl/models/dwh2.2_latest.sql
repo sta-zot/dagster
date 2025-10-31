@@ -61,8 +61,8 @@ CREATE TABLE "dim_edu_program" (
   "edu_program_bk" int UNIQUE,
   "name" varchar,
   "type" varchar,
-  "valid_from"  DATA DEFAULT (now()),
-  "valid_to"  DATA DEFAULT (CURRENT_DATE + INTERVAL '100 years'),
+  "valid_from"  DATE DEFAULT (now()),
+  "valid_to"  DATE DEFAULT (CURRENT_DATE + INTERVAL '100 years'),
   "is_current" bool
 );
 
@@ -73,9 +73,10 @@ CREATE TABLE "dim_staff" (
   "type" varchar,
   "spec" varchar,
   "department" varchar,
+  "organization" varchar,
   "is_fin_lit_provider" bool,
-  "valid_from"  DATA DEFAULT (now()),
-  "valid_to" DATA DEFAULT (CURRENT_DATE + INTERVAL '100 years'),
+  "valid_from"  DATE DEFAULT (now()),
+  "valid_to" DATE DEFAULT (CURRENT_DATE + INTERVAL '100 years'),
   "is_current" bool
 );
 
@@ -84,8 +85,8 @@ CREATE TABLE "dim_organization" (
   "organization_bk" int,
   "name" varchar,
   "type" varchar,
-  "valid_from"  DATA DEFAULT (now()),
-  "valid_to" DATA DEFAULT (CURRENT_DATE + INTERVAL '100 years'),
+  "valid_from"  DATE DEFAULT (now()),
+  "valid_to" DATE DEFAULT (CURRENT_DATE + INTERVAL '100 years'),
   "is_current" bool
 );
 
@@ -105,8 +106,8 @@ CREATE TABLE "dim_training_program" (
   "name" varchar,
   "provider" varchar,
   "duration_hours" float,
-  "valid_from"  DATA DEFAULT (now()),
-  "valid_to" DATA DEFAULT (CURRENT_DATE + INTERVAL '100 years'),
+  "valid_from"  DATE DEFAULT (now()),
+  "valid_to" DATE DEFAULT (CURRENT_DATE + INTERVAL '100 years'),
   "is_current" bool
 );
 
@@ -117,8 +118,8 @@ CREATE TABLE "dim_info_materials" (
   "type" varchar,
   "format" varchar,
   "topic" varchar,
-  "valid_from"  DATA DEFAULT (now()),
-  "valid_to" DATA DEFAULT (CURRENT_DATE + INTERVAL '100 years'),
+  "valid_from"  DATE DEFAULT (now()),
+  "valid_to" DATE DEFAULT (CURRENT_DATE + INTERVAL '100 years'),
   "is_current" bool
 );
 
@@ -127,8 +128,8 @@ CREATE TABLE "dim_placement_point" (
   "placement_point_bk" int,
   "name" varchar,
   "type" varchar,
-  "valid_from"  DATA DEFAULT (now()),
-  "valid_to" DATA DEFAULT (CURRENT_DATE + INTERVAL '100 years'),
+  "valid_from"  DATE DEFAULT (now()),
+  "valid_to" DATE DEFAULT (CURRENT_DATE + INTERVAL '100 years'),
   "is_current" bool
 );
 
@@ -139,8 +140,8 @@ CREATE TABLE "dim_location" (
   "municipality" varchar,
   "settlement" varchar,
   "type" varchar,
-  "valid_from"  DATA DEFAULT (now()),
-  "valid_to" DATA DEFAULT (CURRENT_DATE + INTERVAL '100 years'),
+  "valid_from"  DATE DEFAULT (now()),
+  "valid_to" DATE DEFAULT (CURRENT_DATE + INTERVAL '100 years'),
   "is_current" bool
 );
 
@@ -150,8 +151,8 @@ CREATE TABLE "dim_event" (
   "type" varchar,
   "format" varchar,
   "topic" varchar,
-  "valid_from"  DATA DEFAULT (now()),
-  "valid_to" DATA DEFAULT (CURRENT_DATE + INTERVAL '100 years'),
+  "valid_from"  DATE DEFAULT (now()),
+  "valid_to" DATE DEFAULT (CURRENT_DATE + INTERVAL '100 years'),
   "is_current" bool
 );
 
@@ -160,8 +161,8 @@ CREATE TABLE "dim_partner" (
   "partner_bk" int,
   "type" varchar,
   "name" varchar,
-  "valid_from"  DATA DEFAULT (now()),
-  "valid_to" DATA DEFAULT (CURRENT_DATE + INTERVAL '100 years'),
+  "valid_from"  DATE DEFAULT (now()),
+  "valid_to" DATE DEFAULT (CURRENT_DATE + INTERVAL '100 years'),
   "is_current" bool
 );
 
@@ -169,8 +170,8 @@ CREATE TABLE "dim_audience" (
   "audience_id" SERIAL PRIMARY KEY,
   "age_group" varchar,
   "soc_group" varchar,
-  "valid_from"  DATA DEFAULT (now()),
-  "valid_to" DATA DEFAULT (CURRENT_DATE + INTERVAL '100 years'),
+  "valid_from"  DATE DEFAULT (now()),
+  "valid_to" DATE DEFAULT (CURRENT_DATE + INTERVAL '100 years'),
   "is_current" bool
 );
 
