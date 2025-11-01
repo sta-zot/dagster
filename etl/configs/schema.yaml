@@ -51,13 +51,13 @@ facts:
       - participants_cnt
       - volunteers_cnt
   volunteers_in_events: # Вспомогательная таблица для свизи волонтеров и мероприятий в которых они учавствовали
-    id: ''
+    id: 'id'
     columns:
       - event_id
       - staff_id
       - comment
   fact_trainings:
-    id: ''
+    id: 'id'
     columns:
       - study_mode # дегенеративное измерение
       - location_id # Географическое Место проведения ПК
@@ -68,7 +68,7 @@ facts:
       - start_date_id
       - end_date_id
   fact_edu_integrations:
-    id: ''
+    id: 'id'
     columns:
       - hasFinLit
       - auditorium
@@ -81,7 +81,7 @@ facts:
       - students_cnt                
       - students_with_finlit_cnt
   fact_im_placements:
-    id: ''
+    id: 'id'
     columns:
       - location_id
       - placement_point_id

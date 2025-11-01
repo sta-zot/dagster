@@ -4,7 +4,7 @@ from .graph import (
     emit_file_groups,
     download_and_combine_files,
     clean_and_enrich,
-    split_to_dims_and_facts
+    #split_to_dims_and_facts
 )  # noqa: E402
 
 from etl.pipelines import graph # noqa: E402

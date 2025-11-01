@@ -14,12 +14,14 @@ CREATE TABLE "fact_events" (
 );
 
 CREATE TABLE "volunteers_in_events" (
+  "id" SERIAL PRIMARY KEY,
   "volunteer_id" int,
   "fact_event_id" int,
   "comment" varchar
 );
 
 CREATE TABLE "fact_trainings" (
+  "id" SERIAL PRIMARY KEY,
   "study_mode" varchar,
   "location_id" int,
   "training_provider_id" int,
@@ -31,7 +33,8 @@ CREATE TABLE "fact_trainings" (
 );
 
 CREATE TABLE "fact_edu_integrations" (
-  "hasFinLit" bool,
+  "id" SERIAL PRIMARY KEY,
+  "has_fin_lit" bool,
   "location_id" int,
   "organization_id" int,
   "edu_program_id" int,
@@ -44,6 +47,7 @@ CREATE TABLE "fact_edu_integrations" (
 );
 
 CREATE TABLE "fact_im_placements" (
+  "id" SERIAL PRIMARY KEY,
   "url" text,
   "location_id" int,
   "info_mat_id" int,

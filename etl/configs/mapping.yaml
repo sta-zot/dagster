@@ -101,8 +101,8 @@ edu_org_name:
 
 training_program_provider:
   type: string
-  db_field: name
-  db_table: dim_organization
+  db_field: provider
+  db_table: dim_training_program
   matches:
     - Разработчик программы ПК
     - разработчик программы пк
@@ -155,7 +155,7 @@ study_mode:
 
 start_date:
   type: datetime64[ns]
-  db_field: date
+  db_field: start_date_id
   db_table: dim_date
   matches:
     - Дата начала
@@ -169,7 +169,7 @@ start_date:
 
 end_date:
   type: datetime64[ns]
-  db_field: date
+  db_field: end_date_id
   db_table: dim_date
   matches:
     - Дата окончания
@@ -401,10 +401,10 @@ partner_type:
     - Роль партнёра
     - роль партнёра
 
-palcement_date:
+placement_date:
   type: datetime64[ns]
-  db_field: date
-  db_table: dim_date
+  db_field: date_id
+  db_table: fact_im_placements
   matches:
     - Дата размещения
     - дата размещения
@@ -451,7 +451,7 @@ edu_org_type:
 
 hasFinLit:
   type: bool
-  db_field: hasFinLit
+  db_field: has_fin_lit
   db_table: fact_edu_integrations
   matches:
     - ПФГ Внедерена
@@ -464,6 +464,18 @@ hasFinLit:
     - финансовая грамотность
     - Программа ПФГ
     - программа пфг
+
+edu_program_type:
+  type: string
+  db_field: type
+  db_table: dim_edu_program
+  matches:
+    - Тип Образовательной программы
+    - Тип программы
+    - тип программы
+    - тип Образовательной программы
+
+
 
 edu_program_name:
   type: string
@@ -517,15 +529,27 @@ teachers_cnt:
     - Учителя
     - учителя
 
-teachers_finlit_train_cnt:
+teachers_finlit_trained_cnt:
   type: int
-  db_field: teachers_fin_lit_trained_cnt
+  db_field: teachers_finlit_trained_cnt
   db_table: fact_edu_integrations
   matches:
     - количество преподавателей по ПФГ
     - Количество преподавателей по ПФГ
     - Педагоги по ПФГ
     - педагоги по пфг
+    - Обучающие учителя
+    - обучающие учителя
+
+teachers_finlit_train_cnt:
+  type: int
+  db_field: teachers_finlit_train_cnt
+  db_table: fact_edu_integrations
+  matches:
+    - количество обученных преподавателей
+    - Количество преподавателей прошедших повышение квалификации
+    - Педагоги подготовленные по ПФГ
+    - педагоги подготовленные по пфг
     - Обученные учителя
     - обученные учителя
 

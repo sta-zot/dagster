@@ -2,7 +2,7 @@
 
 Table fact_events [headercolor: #ff0202]{
   //________________Дегенеративные измерения_____________________________
-    fact_event_id            int [pk, increment]
+    id            int [pk, increment]
     is_edu_materials_used   bool
     auditorium              varchar
     event_name              varchar
@@ -36,6 +36,7 @@ Table fact_events [headercolor: #ff0202]{
 
 //__Вспомогательная таблица для указания  волонтеров учавствовавших в организации мероприятия__
 Table volunteers_in_events [headercolor: #9a02ff] {
+    id              int [pk, increment]
     volunteer_id int
     fact_event_id int
     comment varchar
@@ -47,7 +48,7 @@ ref: volunteers_in_events.volunteer_id > dim_staff.staff_id
 Table fact_trainings [headercolor: #ff0084]{
 
     //_______________________Дегенеративные измерения______________________________ 
-
+    id              int [pk, increment]
     study_mode  varchar //Форма обучения
 
     //______________________________________________________________________________
@@ -58,8 +59,8 @@ Table fact_trainings [headercolor: #ff0084]{
     training_program_id     int //Программа повышения квалификации(разраб программы, длительность название)
     staff_id                int //Слушатель прошедший обучение (тип специализация)
     affiliation_org_id      int //Место работы/учебы слушателя
-    start_date_id           int //Дата начала обучения
-    end_date_id             int //Дата окончания обучения
+    start_date           int //Дата начала обучения
+    end_date             int //Дата окончания обучения
     // ____________________________________________________________________________________
     //________________________ Факты __________________________ 
 
@@ -80,7 +81,8 @@ Table fact_trainings [headercolor: #ff0084]{
 
 Table fact_edu_integrations [headercolor: #ed3333]{
   // ______________________Дегенеративные измерения______________________
-    hasFinLit                   bool
+    id              int [pk, increment]
+    has_fin_lit                   bool
   //_____________________________________________________________________
 
   //_______________________Измерения______________________________________

@@ -135,6 +135,30 @@ def create_date_dim(
 
     return df
 
+import datetime
+import random
+
+def get_random_date(start_date, end_date):
+    """
+    Возвращает случайную дату (datetime.date) из заданного диапазона.
+    """
+    if start_date > end_date:
+        # Убедимся, что начальная дата не позже конечной
+        start_date, end_date = end_date, start_date
+        
+    # 1. Вычисляем разницу в днях между датами
+    time_between_dates = end_date - start_date
+    days_between_dates = time_between_dates.days
+    
+    # 2. Генерируем случайное количество дней (включая end_date)
+    random_number_of_days = random.randrange(days_between_dates + 1)
+    
+    # 3. Прибавляем случайное количество дней к начальной дате
+    random_date = start_date + datetime.timedelta(days=random_number_of_days)
+    
+    return random_date
+
+
 
 def load_location_to_db(engine: Engine)-> None:
     locations = pd.read_csv("etl\\data\\locations.csv")

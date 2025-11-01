@@ -1,5 +1,6 @@
 from typing import List, Dict, Tuple, Any
 import yaml
+import re
 from dagster import (
     op,
     graph,
@@ -161,20 +162,21 @@ def clean_and_enrich(
     combined_df = combined_df.dropna(how="all")
     combined_df["settlement"] = (
                 combined_df["settlement"]
+                .str.strip()
                 .str.replace(r'^[\w]+\.','', regex=True)
                 .str.strip()
     )
     return combined_df
     
-@op
-def split_to_dims_and_facts(
-    context: OpExecutionContext, clean_df: pd.DataFrame
-) -> Tuple[Dict[str, pd.DataFrame], pd.DataFrame]:
-    """
-    Разделяет данные на измерения и факты.
-    Возвращает: ({'dim_region': df1, 'dim_activity': df2, ...}, fact_table)
-    """
-    pass
+# @op
+# def split_to_dims_and_facts(
+#     context: OpExecutionContext, clean_df: pd.DataFrame
+# ) -> Tuple[Dict[str, pd.DataFrame], pd.DataFrame]:
+#     """
+#     Разделяет данные на измерения и факты.
+#     Возвращает: ({'dim_region': df1, 'dim_activity': df2, ...}, fact_table)
+#     """
+#     pass
 
 
 @op
@@ -209,8 +211,8 @@ def process_file_group(file_group: List[Dict[str, Any]]):
     """
     combined= download_and_combine_files(file_group)
     cleaned = clean_and_enrich(combined.combined_df)
-    tables = split_to_dims_and_facts(cleaned)
-    ids = load_dimensions_and_facts(tables)
+    #tables = split_to_dims_and_facts(cleaned)
+    ids = load_dimensions_and_facts(cleaned)
     update_mongo_status(ids)
 
 
