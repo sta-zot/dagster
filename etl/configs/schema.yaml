@@ -71,6 +71,7 @@ facts:
     id: ''
     columns:
       - hasFinLit
+      - auditorium
       - location_id # Геогрфическоя привязка 
       - organization_id # Образовательное учреждение
       - edu_program_id  # Образовательная программа(начального, общего, среднего и т.п.)

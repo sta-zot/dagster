@@ -529,7 +529,24 @@ teachers_finlit_train_cnt:
     - Обученные учителя
     - обученные учителя
 
-event:
+is_edu_materials_used:
+  type: bool
+  db_field: is_edu_materials_used
+  db_table: fact_events
+  matches:
+    - Использованы информационные материалы
+auditorium:
+  type: string
+  db_field: auditorium
+  db_table: fact_events
+  matches:
+    - Аудитория
+    - аудитория
+    - Место проведения
+    - Аудитория мероприятия
+    - аудитория мероприятия
+
+event_name:
   type: string
   db_field: event_name
   db_table: fact_events
@@ -603,7 +620,7 @@ volunteers_type:
 
 date:
   type: datetime64[ns]
-  db_field: date
+  db_field: date_id
   db_table: dim_date
   matches:
     - Дата проведения

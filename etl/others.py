@@ -33,23 +33,9 @@ event_report['settlement'] = (
     .str.replace(r'^[\w]+\.', '', regex=True)
     .str.strip())
 # print(event_report.columns)
-volunteers = []
-excluded_cols = ['volunteers', 'volunteers_type']
-volunteers_key_lookup_cols = [
-    col for col in event_report.columns if col not in excluded_cols
-    ]    
-for _, row in event_report.iterrows():
-    _volunteers = row['volunteers'].split(', ')
-    
-    for volunteer in _volunteers:
-        record= {
-                "name": re.sub(r'[^а-яА-ЯёЁa-zA-Z\s]','', volunteer).strip(),
-                "type":  re.sub(r'[^а-яА-ЯёЁa-zA-Z\s]','', row['volunteers_type']).strip(),
-            }
-        for col in volunteers_key_lookup_cols:
-                record[col] = row[col]
-        volunteers.append(record)
-df_volunteers = pd.DataFrame(volunteers)
+
+# print(event_report.columns)
+
 # print(df_volunteers)
 
 dwh = DWHModel(
@@ -59,6 +45,10 @@ dwh = DWHModel(
     db_user="admin",
     db_password="admin",
 )
+
+dwh.load_events_fact(event_report)
+
+
 # neww = dwh.process_dims(
 #     df=event_report,
 #     table='dim_audience',
@@ -68,17 +58,20 @@ dwh = DWHModel(
 # )
 # print(neww)
 # test_fact_events = pd.DataFrame.from_dict()
-test_dict = {
-        'location_id': [0,1],
-        'event': ['test', 'test2'],
-        'event_id': [0,5],
-        'audience_id':[0,34],
-        "organizer_id": [0, 34],
-        "partner_id": [0, 54],
-        "date": [20250404, 20250405],
-        'participants_cnt': [2,23],
-    }
-test_pd = pd.DataFrame.from_dict(test_dict)
-print(test_pd)
-test = dwh.load_facts(test_pd, "fact_events")
-print(test)
+# test_dict = {
+#         'location_id': [3,1],
+#         'event_name': ['test', 'test2'],
+#         'event_id': [1,5],
+#         'audience_id':[2,34],
+#         "organizer_id": [1, 34],
+#         "partner_id": [2, 54],
+#         "date_id": [20250404, 20250405],
+#         'participants_cnt': [2,23],
+#         'is_edu_materials_used': [False, False],
+        
+#         'auditorium': ['Зал РГУ', 'Зал РАТУ']
+# }
+# test_pd = pd.DataFrame.from_dict(test_dict)
+# # print(test_pd)
+# test = dwh.load_facts(test_pd, "fact_events")
+# # print(test)
