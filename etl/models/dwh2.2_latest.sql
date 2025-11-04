@@ -95,7 +95,7 @@ CREATE TABLE "dim_organization" (
 );
 
 CREATE TABLE "dim_date" (
-  "date_id" SERIAL PRIMARY KEY,
+  "date_id" int PRIMARY KEY,
   "date" date,
   "year" int,
   "month" int,

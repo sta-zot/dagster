@@ -155,8 +155,8 @@ def get_random_date(start_date, end_date):
     
     # 3. Прибавляем случайное количество дней к начальной дате
     random_date = start_date + datetime.timedelta(days=random_number_of_days)
-    
-    return random_date
+    result_date = int(random_date.strftime('%Y%m%d'))
+    return result_date
 
 
 

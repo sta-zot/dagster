@@ -3,6 +3,7 @@ from pymongo import MongoClient
 from etl import config
 from .data_models import Meta
 
+
 class MongoDB():
 
     def __init__(

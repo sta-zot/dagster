@@ -2,7 +2,7 @@
 
 Table fact_events [headercolor: #ff0202]{
   //________________Дегенеративные измерения_____________________________
-    id            int [pk, increment]
+    fact_event_id            int [pk, increment]
     is_edu_materials_used   bool
     auditorium              varchar
     event_name              varchar
@@ -59,8 +59,8 @@ Table fact_trainings [headercolor: #ff0084]{
     training_program_id     int //Программа повышения квалификации(разраб программы, длительность название)
     staff_id                int //Слушатель прошедший обучение (тип специализация)
     affiliation_org_id      int //Место работы/учебы слушателя
-    start_date           int //Дата начала обучения
-    end_date             int //Дата окончания обучения
+    start_date_id           int //Дата начала обучения
+    end_date_id             int //Дата окончания обучения
     // ____________________________________________________________________________________
     //________________________ Факты __________________________ 
 
@@ -110,7 +110,9 @@ Table fact_edu_integrations [headercolor: #ed3333]{
 
 Table fact_im_placements [headercolor: #61048c]{
   //___________________Дегенеративные измерения______________________  
+    id                  int [pk, increment]
     url                 text    //Сcылка на размещенные материалы в сети
+
   //_________________________________________________________________  
     // Измерения
     location_id         int     // Место проведения
@@ -147,8 +149,8 @@ Table dim_edu_program [headercolor: #33aced]{
     edu_program_bk       int [unique]  // Натуральный ключ объекта
     name     varchar // наименование программы
     type     varchar // тип программы
-    valid_from              timestamp [default: `now()`]
-    valid_to                timestamp [default: `now()`]
+    valid_from              date [default: `now()`]
+    valid_to                date [default: `CURRENT_DATE + INTERVAL '100 years'`]
     is_current              bool
     indexes{
         (name, type) [name: "program_idx", unique]
@@ -165,9 +167,10 @@ Table dim_staff {
     spec                varchar  // специализация (историк, географ)
 //    organization        varchar     // образовательное учреждение где работает/учится
     department          varchar
+    organization        varchar
     is_fin_lit_provider    bool    // Преподаёт ли Фин. грамоту
-    valid_from          timestamp [default: `now()`]
-    valid_to            timestamp [default: `now()`]
+    valid_from          date [default: `now()`]
+    valid_to                date [default: `CURRENT_DATE + INTERVAL '100 years'`]
     is_current          bool
     indexes{
         (name, type, spec, department) [name: "staf_idx", unique]
@@ -182,8 +185,8 @@ Table dim_organization{
     organization_bk   int // Натуральный ключ
     name varchar // Наименование образовательного учреждения
     type varchar // Тип образовательного учреждения
-    valid_from          timestamp [default: `now()`]
-    valid_to            timestamp [default: `now()`]
+    valid_from          date [default: `now()`]
+    valid_to                date [default: `CURRENT_DATE + INTERVAL '100 years'`]
     is_current          bool
     indexes{
         (name, type) [name: "org_idx", unique]
@@ -193,7 +196,7 @@ Table dim_organization{
 
 //___________________________измерения Времени___________________________
 Table dim_date{
-    date_id    int [pk] // surrogate key, формат YYYYMMDD
+    date_id         int [pk] // surrogate key, формат YYYYMMDD
     date            date
     year            int
     month           int
@@ -210,8 +213,8 @@ Table dim_training_program{
     name                varchar
     provider            varchar
     duration_hours      float // Длительность программы в часах
-    valid_from          timestamp [default: `now()`]
-    valid_to            timestamp [default: `now()`]
+    valid_from          date [default: `now()`]
+    valid_to                date [default: `CURRENT_DATE + INTERVAL '100 years'`]
     is_current          bool
     indexes {
         (name, provider, duration_hours) [name: "training_idx", unique]
@@ -228,8 +231,8 @@ Table dim_info_materials{
     type                    varchar
     format                  varchar
     topic                   varchar
-    valid_from          timestamp [default: `now()`]
-    valid_to            timestamp [default: `now()`]
+    valid_from          date [default: `now()`]
+    valid_to                date [default: `CURRENT_DATE + INTERVAL '100 years'`]
     is_current          bool
     indexes{
         (name, type, topic, format) [name: "im_idx", unique]
@@ -244,8 +247,8 @@ Table dim_placement_point{
     placement_point_bk              int
     name                          varchar
     type                          varchar
-    valid_from          timestamp [default: `now()`]
-    valid_to            timestamp [default: `now()`]
+    valid_from          date [default: `now()`]
+    valid_to                date [default: `CURRENT_DATE + INTERVAL '100 years'`]
     is_current          bool
     indexes{
          (name, type) [name: "placement_idx", unique]
@@ -263,8 +266,8 @@ Table dim_location{
     municipality varchar //Наименование муниципального образования
     settlement   varchar // Наименование населенного пункта
     type         varchar  // Тип населенного пункта (город, село, деревня, кожуун, станица и др.)
-    valid_from          timestamp [default: `now()`]
-    valid_to            timestamp [default: `now()`]
+    valid_from          date [default: `now()`]
+    valid_to                date [default: `CURRENT_DATE + INTERVAL '100 years'`]
     is_current          bool
     
 }
@@ -278,8 +281,8 @@ Table dim_event{
     type            varchar
     format            varchar  
     topic           varchar
-    valid_from          timestamp [default: `now()`]
-    valid_to            timestamp [default: `now()`]
+    valid_from          date [default: `now()`]
+    valid_to                date [default: `CURRENT_DATE + INTERVAL '100 years'`]
     is_current          bool
     indexes{
         (type, format, topic) [name: "event_idx", unique]
@@ -294,8 +297,8 @@ Table dim_partner{
     partner_bk      int 
     type            varchar
     name            varchar
-    valid_from          timestamp [default: `now()`]
-    valid_to            timestamp [default: `now()`]
+    valid_from          date [default: `now()`]
+    valid_to                date [default: `CURRENT_DATE + INTERVAL '100 years'`]
     is_current          bool
     indexes{
          (name, type) [name: "partner_idx", unique]
@@ -308,8 +311,8 @@ Table dim_audience{
     audience_id int [pk, increment] // SK
     age_group   varchar
     soc_group   varchar
-    valid_from          timestamp [default: `now()`]
-    valid_to            timestamp [default: `now()`]
+    valid_from          date [default: `now()`]
+    valid_to                date [default: `CURRENT_DATE + INTERVAL '100 years'`]
     is_current          bool
     indexes{
         (age_group, soc_group) [name: "audience_idx", unique]
