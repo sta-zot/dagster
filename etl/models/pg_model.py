@@ -87,8 +87,9 @@ class DWHModel:
         # так как это таблица фактов в ней не может быть одинаковых полей,
         # поэтому создаем копию таблицы с переименованным столбцами
         renamed_df = df.rename(columns=db_key_mapping)
+        lookup_fields = list(renamed_df.columns)
         # target_columns = list(renamed_df.columns)
-
+       
         found_rows = self.bulk_select(
             df=renamed_df[lookup_fields],
             table=table,
@@ -107,7 +108,6 @@ class DWHModel:
         )
         
         rows_for_insert = merged_df[merged_df[key_col].isna()].drop(columns=[key_col, "_merge"])
-            
         if not rows_for_insert.empty:
             inserted_rows = self.bulk_insert(
                 df=rows_for_insert,
@@ -115,6 +115,7 @@ class DWHModel:
                 target_fields=list(rows_for_insert.columns),
                 key_col=key_col,
             )
+
             rows_for_insert = pd.merge(
                 left=rows_for_insert,
                 right=inserted_rows,
@@ -124,6 +125,9 @@ class DWHModel:
             )
         merged_df = merged_df.dropna(subset=[key_col]).copy()
         final_df = pd.concat([merged_df, rows_for_insert], ignore_index=True)
+        
+        
+        
         # Делаем словарь где ключами являются новые имена а значениями старые
         # Переворачиваем словарь db_key_mapping
        
@@ -621,8 +625,8 @@ class DWHModel:
         temp_df = self.process_dims(
             df=df,
             table="dim_location",
-            lookup_fields=["settlement", "municipality"],
-            target_fields=["settlement", "municipality"],
+            lookup_fields=["region", "settlement", "municipality"],
+            target_fields=["region", "settlement", "municipality"],
             key_col="location_id",
         )
 
@@ -685,6 +689,8 @@ class DWHModel:
 
     def load_trainig_facts(self, df: pd.DataFrame):
         # Get location dimensions id
+        #Принимает набор полей и заменияет его {key_col} 
+        # и возвращает новый датафрейм с  {key_col} вместо {target_fields}
         temp_df = self.process_dims(
             df=df,
             table="dim_location",
@@ -736,11 +742,12 @@ class DWHModel:
         temp_df["end_date"] = temp_df["end_date"].apply(
             lambda field: int(field.strftime("%Y%m%d")) if pd.notnull(field) else None
         )
-        print(list(temp_df.columns))
-
+        #принимает датафрейм где все поля измерений заменены на идентификаторы 
+        # Проверяет по lookup_fields наличие записей в таблице что бы не дублировать
+        # недостающие записи вставляет
         ids = self.load_to_fact_table(
-            temp_df,
-            "fact_trainings",
-            ["start_date", "end_date", "location_id", "staff_id"],
+            df=temp_df,
+            table="fact_trainings",
+            lookup_fields=["start_date", "end_date", "location_id", "staff_id"],
         )
         return ids
